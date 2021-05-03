@@ -1,0 +1,4 @@
+1. JOIN 3 table : 
+SELECT * FROM siswa JOIN detail_kelas ON detail_kelas.id_siswa = siswa.id_siswa join kelas ON kelas.id_kelas=detail_kelas.id_kelas;
+2. menemukan siswa yuji berada di kelas mana
+SELECT * FROM siswa JOIN detail_kelas ON detail_kelas.id_siswa = siswa.id_siswa join kelas ON kelas.id_kelas=detail_kelas.id_kelas WHERE nama_siswa ="yuji"
