@@ -11,8 +11,9 @@
                 <a href="/Guru/ulangan_soal" class="btn btn-primary">Kembali</a>
                 <br>
 
-                <form method="post" action="{{ route('storeSoalTambah') }} " enctype="multipart/form-data">
+                <form method="post" action="/Guru/ulangan_soal/{{ $soal->id }}" enctype="multipart/form-data">
                     @csrf
+                    @method('patch')
                     <div class="form-group">
                         <label>Ulangan</label>
                         <br>
@@ -27,7 +28,7 @@
                     <div class="form-group">
                         <label>Soal</label>
                             <textarea id="summernote" name="soal"  class="form-control @error('soal') is-invalid @enderror "
-                            value="{{ old('soal') }}"></textarea>
+                            value="{{ old('soal', $soal->soal) }}"></textarea>
 
                         @if($errors->has('soal'))
                         <div class="text-danger">
@@ -51,7 +52,7 @@
                     <div class="form-group">
                         <label>Pilihan A</label>
                         <input id="pilA" name="pilA"  class="form-control @error('pilA') is-invalid @enderror "
-                            value="{{ old('pilA') }}">
+                            value="{{ old('pilA', $soal->pilA) }}">
 
                         @if($errors->has('pilA'))
                         <div class="text-danger">
@@ -63,7 +64,7 @@
                     <div class="form-group">
                         <label>Pilihan B</label>
                         <input id="pilB" name="pilB"  class="form-control @error('pilB') is-invalid @enderror "
-                            value="{{ old('pilB') }}">
+                            value="{{ old('pilB', $soal->pilB) }}">
 
                         @if($errors->has('pilB'))
                         <div class="text-danger">
@@ -75,7 +76,7 @@
                     <div class="form-group">
                         <label>Pilihan C</label>
                         <input id="pilC" name="pilC"  class="form-control @error('pilC') is-invalid @enderror "
-                            value="{{ old('pilC') }}">
+                            value="{{ old('pilC', $soal->pilC) }}">
 
                         @if($errors->has('pilC'))
                         <div class="text-danger">
@@ -87,7 +88,7 @@
                     <div class="form-group">
                         <label>Pilihan D</label>
                         <input id="pilD" name="pilD"  class="form-control @error('pilD') is-invalid @enderror "
-                            value="{{ old('pilD') }}">
+                            value="{{ old('pilD', $soal->pilD) }}">
 
                         @if($errors->has('pilD'))
                         <div class="text-danger">
@@ -99,7 +100,7 @@
                     <div class="form-group">
                         <label>Pilihan E</label>
                         <input id="pilE" name="pilE"  class="form-control @error('pilE') is-invalid @enderror "
-                            value="{{ old('pilE') }}">
+                            value="{{ old('pilE', $soal->pilE) }}">
 
                         @if($errors->has('pilE'))
                         <div class="text-danger">
@@ -137,31 +138,5 @@
         </div>
     </div>
 @endsection
-{{-- @push('styles')
-    {{-- SUMMERNOTE --}}
-    {{-- <link href="{{ asset('temp/vendor/summernote/summernote.min.css') }}" rel="stylesheet">
-@endpush
 
-@push('script') --}}
-    {{-- summernote --}}
-{{-- <script src="{{ asset('temp/vendor/summernote/summernote.min.js') }}"></script>
-<script type="text/javascript"> --}}
-    {{-- // $(document).ready(function () {
-    //     $('#summernote').summernote();
-    // })
-    $('#summernote').summernote({
-        toolbar: [
-            // [groupName, [list of button]]
-            ['style', ['bold', 'italic', 'underline', 'clear']],
-            ['font', ['strikethrough', 'superscript', 'subscript']],
-            ['fontsize', ['fontsize']],
-            ['color', ['color']],
-            ['para', ['ul', 'ol', 'paragraph']],
-            ['height', ['height']],
-            ['insert', ['link', 'picture', 'video']],
-        ],
-        popatmouse:true
-    });
-</script>
-@endpush  --}}
 

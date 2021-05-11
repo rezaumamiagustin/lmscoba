@@ -39,7 +39,7 @@
     {{-- datatables --}}
     <link rel="stylesheet" type="text/css"
         href="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.24/b-1.7.0/b-colvis-1.7.0/b-html5-1.7.0/b-print-1.7.0/datatables.min.css" />
-
+{{-- @stack('styles') --}}
 </head>
 
 <body class="animsition">
@@ -262,7 +262,10 @@
 
     <script>
         $(document).ready(function () {
-            $('#table').DataTable();
+            $('#table').DataTable({
+                "scrollY": 200,
+                "scrollX": true
+            });
         });
 
     </script>
@@ -284,11 +287,10 @@
                 ['height', ['height']],
                 ['insert', ['link', 'picture', 'video']],
             ],
-            height:400,
             popatmouse:true
         });
     </script>
-
+{{-- @stack('scipts') --}}
 </body>
 
 </html>

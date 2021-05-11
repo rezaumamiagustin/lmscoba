@@ -9,6 +9,7 @@ class Ulangan extends Model
 {
     use HasFactory;
     protected $table = "ulangans";
+    
     protected $fillable = ['id_tingkat','id_jurusan','id_mapel','judul_ulangan',
      'waktu_mulai', 'waktu_selesai'];
 
@@ -25,5 +26,15 @@ class Ulangan extends Model
     public function mapel()
     {
     return $this->belongsTo(Mapel::class, 'id_mapel');
+    }
+
+    public function soal_ulangan()
+    {
+        return $this->hasMany(Ulangan::class, 'id_ulangan');
+    }
+
+    public function nilai_ulangan()
+    {
+        return $this->hasMany(Ulangan::class, 'id_ulangan');
     }
 }
