@@ -11,6 +11,8 @@ use App\Models\Ulangan;
 use App\Models\Soal;
 use Illuminate\Http\Request;
 use Path\To\DOMDocument;
+use DateTime;
+use DateTimeZone;
 use Intervention\Image\ImageManagerStatic as Image;
 use Illuminate\Support\Facades\DB;
 
@@ -19,7 +21,7 @@ class UlanganController extends Controller
     
     public function index()
     {
-        $ulangan = Ulangan::with('tingkat','mapel','jurusan')->latest()->paginate(9);
+        $ulangan = Ulangan::with('tingkat','mapel','jurusan')->latest()->paginate(100);
         return view('Guru/ulangan', compact('ulangan'));
     }
 
@@ -96,11 +98,13 @@ class UlanganController extends Controller
     }
 
     // SOAL halaman data data soal
-    public function soal(Ulangan $ulangan)
+    public function soal($id_ulangan)
     {
+        $ul = DB::table('soals')
+                    ->where('id_ulangan',$id_ulangan)->get();
         $ulangan = Ulangan::all();
-        $soal = Soal::with('ulangan')->paginate(10);
-        return view('Guru/ulangan_soal', compact('soal','ulangan'));
+        $soal = Soal::with('ulangan')->paginate(100);
+        return view('Guru/ulangan_soal', compact('soal','ulangan','ul'));
     }
 
     public function inputSoal()
@@ -112,26 +116,26 @@ class UlanganController extends Controller
 
     public function buatSoal(Request $request){
 
-        // if($request->foto){
-        //     $ut = $request->foto;  
-        //     $namafile=time().rand(100,999).".".$ut->getClientOriginalExtension(); 
-        //     $dtUpload = new Soal;
-        //     $dtUpload->id_ulangan = $request->id_ulangan;
-        //     $dtUpload->foto = $namafile;
-        //     $dtUpload->soal = $request->soal;
-        //     $dtUpload->pilA = $request->pilA;
-        //     $dtUpload->pilB = $request->pilB;
-        //     $dtUpload->pilC = $request->pilC;
-        //     $dtUpload->pilD = $request->pilD;
-        //     $dtUpload->pilE = $request->pilE;
-        //     $dtUpload->kunci_jawaban = $request->kunci_jawaban;
+        if($request->foto){
+             $ut = $request->foto;  
+             $namafile=time().rand(100,999).".".$ut->getClientOriginalExtension(); 
+             $dtUpload = new Soal;
+             $dtUpload->id_ulangan = $request->id_ulangan;
+             $dtUpload->foto = $namafile;
+             $dtUpload->soal = $request->soal;
+             $dtUpload->pilA = $request->pilA;
+             $dtUpload->pilB = $request->pilB;
+             $dtUpload->pilC = $request->pilC;
+             $dtUpload->pilD = $request->pilD;
+             $dtUpload->pilE = $request->pilE;
+             $dtUpload->kunci_jawaban = $request->kunci_jawaban;
 
-        //     $ut->move(public_path().'/temp/soal', $namafile);
-        //     $dtUpload->save();
+             $ut->move(public_path().'/temp/soal', $namafile);
+             $dtUpload->save();
 
-        //     return redirect('/Guru/ulangan')->with('status', 'Soal sudah terupload');
-        // }
-        // else {
+             return redirect('/Guru/ulangan_soal')->with('status', 'Soal sudah terupload');
+        }
+         else {
             $this->validate($request, [
                 'id_ulangan'=> 'required',
                 'soal' => 'required',
@@ -142,45 +146,55 @@ class UlanganController extends Controller
                 'pilE' => 'required',
                 'kunci_jawaban' => 'required'
             ]);
-                
-        // }
-
-        $storage="temp/storage/soal";
-        $dom=new \DOMDocument();
-        libxml_use_internal_errors(true);
-        $dom->loadHTML($request->soal,LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NOIMPLIED);
-        libxml_clear_errors();
-        $images=$dom->getElementsByTagName('img');
-        foreach($images as $img){
-            $src=$img->getAttribute('src');
-            if(preg_match('/data:image/', $src)){
-                preg_match('/data:image\/(?<mime>.*?)\;/',$src,$groups);
-                $mimetype=$groups['mime'];
-                $fileNameContent=uniqid();
-                $fileNameContentRand=substr(md5($fileNameContent),6,6).'_'.time();
-                $filepath=("$storage/$fileNameContentRand.$mimetype");
-                $image=Image::make($src)
-                    ->resize(1200,1200)
-                    ->encode($mimetype,100)
-                    ->save(public_path($filepath));
-                $new_src=asset($filepath);
-                $img->removeAttribute('src');
-                $img->setAttribute('src', $new_src);
-                $img->setAttribute('class','img-responsive');
-            }
+            Soal::create([
+                'id_ulangan' => $request->id_ulangan,
+                'soal' => $request->soal,
+                'pilA' => $request->pilA,
+                'pilB' => $request->pilB,
+                'pilC' => $request->pilC,
+                'pilD' => $request->pilD,
+                'pilE' => $request->pilE,
+                'kunci_jawaban' => $request->kunci_jawaban
+            ]);
+            return redirect('/Guru/ulangan_soal')->with('status', 'Soal sudah terupload');  
         }
-        Soal::create([
-            'id_ulangan' => $request->id_ulangan,
-            // 'soal' => $request->soal,
-            'soal' => $dom->saveHTML(),
-            'pilA' => $request->pilA,
-            'pilB' => $request->pilB,
-            'pilC' => $request->pilC,
-            'pilD' => $request->pilD,
-            'pilE' => $request->pilE,
-            'kunci_jawaban' => $request->kunci_jawaban
-        ]);
-        return redirect('/Guru/ulangan_soal')->with('status', 'Soal sudah terupload');
+
+        // $storage="temp/storage/soal";
+        // $dom=new \DOMDocument();
+        // libxml_use_internal_errors(true);
+        // $dom->loadHTML($request->soal,LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NOIMPLIED);
+        // libxml_clear_errors();
+        // $images=$dom->getElementsByTagName('img');
+        // foreach($images as $img){
+        //     $src=$img->getAttribute('src');
+        //     if(preg_match('/data:image/', $src)){
+        //         preg_match('/data:image\/(?<mime>.*?)\;/',$src,$groups);
+        //         $mimetype=$groups['mime'];
+        //         $fileNameContent=uniqid();
+        //         $fileNameContentRand=substr(md5($fileNameContent),6,6).'_'.time();
+        //         $filepath=("$storage/$fileNameContentRand.$mimetype");
+        //         $image=Image::make($src)
+        //             ->resize(1200,1200)
+        //             ->encode($mimetype,100)
+        //             ->save(public_path($filepath));
+        //         $new_src=asset($filepath);
+        //         $img->removeAttribute('src');
+        //         $img->setAttribute('src', $new_src);
+        //         $img->setAttribute('class','img-responsive');
+        //     }
+        // }
+        // Soal::create([
+        //     'id_ulangan' => $request->id_ulangan,
+        //     // 'soal' => $request->soal,
+        //     'soal' => $dom->saveHTML(),
+        //     'pilA' => $request->pilA,
+        //     'pilB' => $request->pilB,
+        //     'pilC' => $request->pilC,
+        //     'pilD' => $request->pilD,
+        //     'pilE' => $request->pilE,
+        //     'kunci_jawaban' => $request->kunci_jawaban
+        // ]);
+        
        
     }
 
@@ -190,55 +204,105 @@ class UlanganController extends Controller
         return view('Guru/ulangan_editSoal', compact('ulangan','soal'));
     }
 
-    public function updateSoal(Request $request, Soal $soal){
-        $this->validate($request, [
-            'soal' => 'required',
-            'pilA' => 'required',
-            'pilB' => 'required',
-            'pilC' => 'required',
-            'pilD' => 'required',
-            'pilE' => 'required',
-            'kunci_jawaban' => 'required'
-        ]);
-        
-        $storage="temp/storage/soal";
-        $dom=new \DOMDocument();
-        libxml_use_internal_errors(true);
-        $dom->loadHTML($request->soal,LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NOIMPLIED);
-        libxml_clear_errors();
-        $images=$dom->getElementsByTagName('img');
-        foreach($images as $img){
-            $src=$img->getAttribute('src');
-            if(preg_match('/data:image/', $src)){
-                preg_match('/data:image\/(?<mime>.*?)\;/',$src,$groups);
-                $mimetype=$groups['mime'];
-                $fileNameContent=uniqid();
-                $fileNameContentRand=substr(md5($fileNameContent),6,6).'_'.time();
-                $filepath=("$storage/$fileNameContentRand.$mimetype");
-                $image=Image::make($src)
-                    ->resize(1200,1200)
-                    ->encode($mimetype,100)
-                    ->save(public_path($filepath));
-                $new_src=asset($filepath);
-                $img->removeAttribute('src');
-                $img->setAttribute('src', $new_src);
-                $img->setAttribute('class','img-responsive');
-            }
+    public function updateSoal(Request $request, $id){
+        $ubah = Soal::findorfail($id);
+        $awal = $ubah->foto;
+        // if($request->foto){
+        $ut =[
+            'id_ulangan' => $request['id_ulangan'],
+            'foto' => $awal,
+            'soal' => $request['soal'],
+            'pilA' => $request['pilA'],
+            'pilB' => $request['pilB'],
+            'pilC' => $request['pilC'],
+            'pilD'=>$request['pilD'],
+            'pilE'=> $request['pilE'],
+            'kunci_jawaban' => $request['kunci_jawaban']  
+        ];
+        if($request->foto){
+            $request->foto->move(public_path().'/temp/soal', $awal);
+            $ubah->update($ut);
+            return redirect('/Guru/ulangan_soal')->with('status', 'Soal sudah terupdate');
         }
-        Soal::where('id', $soal->id)
-            ->update([
-                'id_ulangan' => $request->id_ulangan,
-            // 'soal' => $request->soal,
-            'soal' => $dom->saveHTML(),
-            'pilA' => $request->pilA,
-            'pilB' => $request->pilB,
-            'pilC' => $request->pilC,
-            'pilD' => $request->pilD,
-            'pilE' => $request->pilE,
-            'kunci_jawaban' => $request->kunci_jawaban
-            ]);
+        else{
+            $ubah->update($ut);
+            return redirect('/Guru/ulangan_soal')->with('status', 'Soal sudah terupdate');
+        }
 
-        return redirect('/Guru/ulangan_soal')->with('status', 'Data Soal berhasil di edit');
+        // }
+        // else{
+        //     $this->validate($request, [
+        //         'soal' => 'required',
+        //         'pilA' => 'required',
+        //         'pilB' => 'required',
+        //         'pilC' => 'required',
+        //         'pilD' => 'required',
+        //         'pilE' => 'required',
+        //         'kunci_jawaban' => 'required'
+        //     ]);
+        //     Soal::where('id', $soal->id)
+        //     ->update([
+        //         'id_ulangan' => $request->id_ulangan,
+        //     // 'soal' => $request->soal,
+        //     'soal' => $request->soal,
+        //     'pilA' => $request->pilA,
+        //     'pilB' => $request->pilB,
+        //     'pilC' => $request->pilC,
+        //     'pilD' => $request->pilD,
+        //     'pilE' => $request->pilE,
+        //     'kunci_jawaban' => $request->kunci_jawaban
+        //     ]);
+
+        //     return redirect('/Guru/ulangan_soal')->with('status', 'Data Soal berhasil di edit');
+        // }
+        // $this->validate($request, [
+        //     'soal' => 'required',
+        //     'pilA' => 'required',
+        //     'pilB' => 'required',
+        //     'pilC' => 'required',
+        //     'pilD' => 'required',
+        //     'pilE' => 'required',
+        //     'kunci_jawaban' => 'required'
+        // ]);
+        
+        // $storage="temp/storage/soal";
+        // $dom=new \DOMDocument();
+        // libxml_use_internal_errors(true);
+        // $dom->loadHTML($request->soal,LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NOIMPLIED);
+        // libxml_clear_errors();
+        // $images=$dom->getElementsByTagName('img');
+        // foreach($images as $img){
+        //     $src=$img->getAttribute('src');
+        //     if(preg_match('/data:image/', $src)){
+        //         preg_match('/data:image\/(?<mime>.*?)\;/',$src,$groups);
+        //         $mimetype=$groups['mime'];
+        //         $fileNameContent=uniqid();
+        //         $fileNameContentRand=substr(md5($fileNameContent),6,6).'_'.time();
+        //         $filepath=("$storage/$fileNameContentRand.$mimetype");
+        //         $image=Image::make($src)
+        //             ->resize(1200,1200)
+        //             ->encode($mimetype,100)
+        //             ->save(public_path($filepath));
+        //         $new_src=asset($filepath);
+        //         $img->removeAttribute('src');
+        //         $img->setAttribute('src', $new_src);
+        //         $img->setAttribute('class','img-responsive');
+        //     }
+        // }
+        // // Soal::where('id', $soal->id)
+        // //     ->update([
+        // //         'id_ulangan' => $request->id_ulangan,
+        // //     // 'soal' => $request->soal,
+        // //     'soal' => $dom->saveHTML(),
+        // //     'pilA' => $request->pilA,
+        // //     'pilB' => $request->pilB,
+        // //     'pilC' => $request->pilC,
+        // //     'pilD' => $request->pilD,
+        // //     'pilE' => $request->pilE,
+        // //     'kunci_jawaban' => $request->kunci_jawaban
+        // //     ]);
+
+        // return redirect('/Guru/ulangan_soal')->with('status', 'Data Soal berhasil di edit');
     }
 
     public function hapusSoal($id)
@@ -249,31 +313,43 @@ class UlanganController extends Controller
     }
 
     // Untuk Siswa
-    public function ulSiswa(){
-        $ulangan = Ulangan::with('tingkat','mapel','jurusan')->latest()->paginate(9);
-        return view('Siswa/ulangan', compact('ulangan'));
+    
+    public function ulSiswa(Request $request){
+        $id_siswa=1;
+        $join = DB::select('select u.id, u.judul_ulangan, u.waktu_mulai, u.waktu_selesai, nu.nilai
+        from ulangans as u 
+        join nilai_ulangans as nu on u.id= nu.id_ulangan
+        where id_siswa=1'
+        );
+        $nu = NilaiUlangan::all();
+        $soal= Soal::with('ulangan')->latest()->paginate(100);
+        $ulangan = Ulangan::with('tingkat','mapel','jurusan')->latest()->paginate(100);
+        return view('Siswa/ulangan', compact('ulangan','soal','nu','join'));
     }
 
-    public function kerjakan($id){
-        // $ulangan = Ulangan::all();
-        // $soal = Soal::with('ulangan')->findorfail($id);
+    public function kerjakan($id_ulangan){
+        $sl = DB::table('soals')
+                    ->where('id_ulangan',$id_ulangan)->get();
         $nilaiul=NilaiUlangan::all();
         $siswa=Siswa::all();
         $ulg = Ulangan::all();
         $soal = Soal::all();
-        $ulangan = Ulangan::findorfail($id);
-        return view('Siswa/ulangan_soal', compact('ulg','soal','siswa','nilaiul'));
+        // $ulangan = Ulangan::findorfail($id);
+        return view('Siswa/ulangan_soal', compact('ulg','soal','siswa','nilaiul','sl'));
     } 
     
-    public function ulanganSoal(){
-        $nilaiul=NilaiUlangan::all();
-        $siswa=Siswa::all();
-        $ulangan = Ulangan::all();
-        $soal = Soal::all();
-        return view('Siswa/ulangan_soal', compact('soal','siswa','ulangan','nilaiul'));
-    }
+    // public function ulanganSoal($id_ulangan){
+    //     $soal = Soal::with('ulangan')->findorfail($id_ulangan);
+    //     $sl = DB::table('soals')
+    //                 ->where('id_ulangan')->get();
+    //     $nilaiul=NilaiUlangan::all();
+    //     $siswa=Siswa::all();
+    //     $ulangan = Ulangan::all();
+    //     // $soal = Soal::all();
+    //     return view('Siswa/ulangan_soal', compact('siswa','ulangan','nilaiul','sl','soal'));
+    // }
 
-    // public $nilai;
+    // mendapatkan nilainya
     public function kerjakanSoal(Request $request){
         $pilihan     = $request->pilihan;
         $id_soal     = $request->id;
@@ -341,7 +417,7 @@ class UlanganController extends Controller
         return redirect('/Siswa/ulangan_hasil')->with('status', 'Ini hasil ulangannya!');
     }
     public function nilaiUl(){
-        $nilai_ulangan = NilaiUlangan::with('ulangan','siswa')->paginate(30);
+        $nilai_ulangan = NilaiUlangan::with('ulangan','siswa')->paginate(100);
         return view('Siswa/ulangan_hasil', compact('nilai_ulangan'));
     }
 

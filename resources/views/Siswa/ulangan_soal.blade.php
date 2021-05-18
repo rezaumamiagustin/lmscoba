@@ -33,13 +33,14 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Soal</label>
-                        @foreach ($soal as $so)
-                        <input type="hidden" name="id[]" value="{{$so->id}}">
-                        <input type="hidden" name="jumlah" value="{{$so->count()}}">
+                        <h4>Soal</h4><br>
+                        @foreach ($sl as $so)
+                        {{-- <input type="hidden" name="id" value="{{$so->id}}"> --}}
+                        {{-- <input type="hidden" name="jumlah" value="{{$so->count()}}"> --}}
                         {{-- @php $no=1; @endphp --}}
                             <div class="form-group">
                                 <h5> {!! $so->soal !!}</h5>
+                                <img src="{{ asset('temp/soal/'. $so->foto) }}" height="30%" width="30%">
                                 <p>A.   <input type='radio' id="pilihan" name='pilihan[{{$so->id}}]' value='pilA' /> {{ $so->pilA }}
                                     @error('pilihan') <span class="text-danger">{{ $message }}</span> @enderror </p>
                                 <p>B.   <input type='radio' id="pilihan" name='pilihan[{{$so->id}}]' value='pilB' /> {{ $so->pilB }}

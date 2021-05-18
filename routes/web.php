@@ -40,9 +40,10 @@ Route::delete('/Guru/ulangan_soal/{id}', [UlanganController::class, 'hapusSoal']
 
 // ============Ulangan Siswa=========
 Route::get('/Siswa/ulangan', [UlanganController::class, 'ulSiswa']);
-Route::get('/Siswa/ulangan_soal/kerjakan/{ulangan}', [UlanganController::class, 'kerjakan']);
-Route::get('/Siswa/ulangan_soal', [UlanganController::class, 'ulanganSoal']);
-Route::get('/Siswa/ulangan_soal/kerjakan', [UlanganController::class, 'kerjakan']);
+Route::get('/Siswa/ulangan_soal/kerjakan/{id_ulangan}', [UlanganController::class, 'kerjakan'])->name('kerjakan');;
+Route::get('/Siswa/ulangan_soal/soal/{id_ulangan}', [UlanganController::class, 'ulanganSoal']);
+// Route::get('/Siswa/ulangan_soal/kerjakan/{$id_ulangan}', [UlanganController::class, 'kerjakan']);
+// Route::get('/Siswa/ulangan_soal/kerjakan', [UlanganController::class, 'kerjakan']);
 Route::post('/ulangan_soal/kerjakanSoal', [UlanganController::class, 'kerjakanSoal'])->name('kerjakanSoal');
 // Route::post('/ulangan_soal', [UlanganController::class, 'kerjakanSoal']);
 Route::get('/Siswa/ulangan_hasil', [UlanganController::class, 'nilaiUl']);

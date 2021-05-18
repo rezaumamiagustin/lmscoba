@@ -27,7 +27,7 @@
 
                     <div class="form-group">
                         <label>Soal</label>
-                            <textarea id="summernote" name="soal"  class="form-control @error('soal') is-invalid @enderror "
+                            <textarea id="soal" name="soal"  class="form-control @error('soal') is-invalid @enderror "
                             value="{{ old('soal', $soal->soal) }}"></textarea>
 
                         @if($errors->has('soal'))
@@ -37,7 +37,7 @@
                         @endif
                     </div>
 
-                    {{-- <div class="form-group">
+                    <div class="form-group">
                         <label>Gambar</label>
                         <input id="foto" name="foto" type="file" class="form-control @error('foto') is-invalid @enderror "
                             value="{{ old('foto') }}">
@@ -47,7 +47,16 @@
                             {{ $errors->first('foto')}}
                         </div>
                         @endif
-                    </div> --}}
+                    </div>
+
+                    <div class="form-group">
+                        <img src="{{ asset('temp/soal/'. $soal->foto) }}" height="50%" width="100%">
+                        @if($errors->has('foto'))
+                        <div class="text-danger">
+                            {{ $errors->first('foto')}}
+                        </div>
+                        @endif
+                    </div>
 
                     <div class="form-group">
                         <label>Pilihan A</label>

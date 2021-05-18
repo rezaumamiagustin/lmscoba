@@ -21,7 +21,7 @@
             <thead>
                 <tr>
                     <th>No</th>
-                    <th>Ulangan</th>
+                    {{-- <th>Ulangan</th> --}}
                     <th>Soal</th>
                     <th>Foto</th>
                     <th>Pilihan A</th>
@@ -34,11 +34,12 @@
                 </tr>
             </thead>
             @php $no=1; @endphp
-            @foreach ($soal as $so)
+            @foreach ($ul as $so)
              <tr>
                 <td>{{ $no++ }}</td>
-                <td>{{ $so->ulangan->judul_ulangan }}</td>
-                <td>{!! $so->soal  !!}</td>
+                {{-- <td>{{ $so->ulangan->judul_ulangan }}</td> --}}
+                {{-- kalo pake summernote : jadi {!! $so->soal !!} --}}
+                <td>{!! $so->soal !!}</td>
                 <td><img src="{{ asset('temp/soal/'. $so->foto) }}" height="50%" width="100%"></td>
                 <td>{{ $so->pilA }}</td>
                 <td>{{ $so->pilB }}</td>
