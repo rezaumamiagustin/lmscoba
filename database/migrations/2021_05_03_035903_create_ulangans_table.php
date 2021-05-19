@@ -15,15 +15,15 @@ class CreateUlangansTable extends Migration
     {
         Schema::create('ulangans', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('id_tingkat');
-            $table->foreign('id_tingkat')->references('id')->on('tingkats')->onUpdate('cascade')->onDelete('cascade');
+            $table->unsignedBigInteger('id_kelas');
+            $table->foreign('id_kelas')->references('id')->on('kelas')->onUpdate('cascade')->onDelete('cascade');
             $table->unsignedBigInteger('id_mapel');
             $table->foreign('id_mapel')->references('id')->on('mapels')->onUpdate('cascade')->onDelete('cascade');
-            $table->unsignedBigInteger('id_jurusan');
-            $table->foreign('id_jurusan')->references('id')->on('jurusans')->onUpdate('cascade')->onDelete('cascade');
+            // $table->unsignedBigInteger('id_jurusan');
+            // $table->foreign('id_jurusan')->references('id')->on('jurusans')->onUpdate('cascade')->onDelete('cascade');
             $table->string('judul_ulangan');
-            $table->datetime('waktu_mulai');
-            $table->datetime('waktu_selesai');
+            $table->datetime('waktu_mulai')->nullable();
+            $table->datetime('waktu_selesai')->nullable();
             $table->timestamps();
         });
     }

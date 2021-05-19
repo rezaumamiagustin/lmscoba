@@ -26,7 +26,7 @@
             </tr>
         </thead>
         @php $no=1; @endphp
-        @foreach ($join as $ul)
+        @foreach ($ulangan as $ul)
         <tr>
             <td>{{ $no++ }}</td>
             <td>{{ $ul->judul_ulangan }}</td>
@@ -35,11 +35,14 @@
             <td>{{ $ul->waktu_mulai }}</td>
             <td>{{ $ul->waktu_selesai }}</td>
             <td>
-                @if ($ul->nilai == null)
+                {{--<p><input type="time" name="waktu" min="07:00" max="11:30" required></p> --}}
+                <button type ="datetime-local" class="btn btn-info" min="{{$ul->waktu_mulai}}" max="{{ $ul->waktu_selesai }}" href="/Siswa/ulangan_soal/kerjakan/{{ $ul->id }}" required>Kerjakan</button>
+                {{--<a class="btn btn-info" href="/Siswa/ulangan_soal/kerjakan/{{ $ul->id }}">Kerjakan</a>--}}
+                {{-- @if ($ul->nilai == null)
                     <a class="btn btn-info" href="/Siswa/ulangan_soal/kerjakan/{{ $ul->id }}">Kerjakan</a>
                 @else
                     <a class="btn btn-info disabled" href="/Siswa/ulangan_soal/kerjakan/{{ $ul->id }}">Kerjakan</a>
-                @endif 
+                @endif  --}}
             </td>
         </tr>
         @endforeach

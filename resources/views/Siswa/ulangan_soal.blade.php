@@ -34,25 +34,38 @@
                     </div>
                     <div class="form-group">
                         <h4>Soal</h4><br>
+                        @php
+                            $count = 0;
+                        @endphp
                         @foreach ($sl as $so)
-                        {{-- <input type="hidden" name="id" value="{{$so->id}}"> --}}
-                        {{-- <input type="hidden" name="jumlah" value="{{$so->count()}}"> --}}
+                        
+                        <input type="text"  name="id_soal[{{$so->id}}]" value="{{$so->id}}" disabled>
+                        @php
+                            $count++;
+                        @endphp
+
                         {{-- @php $no=1; @endphp --}}
                             <div class="form-group">
                                 <h5> {!! $so->soal !!}</h5>
+                                @if($so->foto !=null)
                                 <img src="{{ asset('temp/soal/'. $so->foto) }}" height="30%" width="30%">
-                                <p>A.   <input type='radio' id="pilihan" name='pilihan[{{$so->id}}]' value='pilA' /> {{ $so->pilA }}
+                                @endif
+                                
+                                <p><input type='radio' id="pilihan" name='pilihan[{{$so->id}}]' value='pilA' /> A.  {{ $so->pilA }}
                                     @error('pilihan') <span class="text-danger">{{ $message }}</span> @enderror </p>
-                                <p>B.   <input type='radio' id="pilihan" name='pilihan[{{$so->id}}]' value='pilB' /> {{ $so->pilB }}
+                                <p><input type='radio' id="pilihan" name='pilihan[{{$so->id}}]' value='pilB' /> B. {{ $so->pilB }}
                                     @error('pilihan') <span class="text-danger">{{ $message }}</span> @enderror </p>
-                                <p>C.   <input type='radio' id="pilihan" name='pilihan[{{$so->id}}]' value='pilC' /> {{ $so->pilC }}
+                                <p> <input type='radio' id="pilihan" name='pilihan[{{$so->id}}]' value='pilC' /> C. {{ $so->pilC }}
                                     @error('pilihan') <span class="text-danger">{{ $message }}</span> @enderror </p>
-                                <p>D.   <input type='radio' id="pilihan" name='pilihan[{{$so->id}}]' value='pilD' /> {{ $so->pilD }}
+                                <p> <input type='radio' id="pilihan" name='pilihan[{{$so->id}}]' value='pilD' /> D. {{ $so->pilD }}
                                     @error('pilihan') <span class="text-danger">{{ $message }}</span> @enderror </p>
-                                <p>E.   <input type='radio' id="pilihan" name='pilihan[{{$so->id}}]' value='pilE' /> {{ $so->pilE }}
+                                <p> <input type='radio' id="pilihan" name='pilihan[{{$so->id}}]' value='pilE' /> E. {{ $so->pilE }}
                                     @error('pilihan') <span class="text-danger">{{ $message }}</span> @enderror </p>
                             </div>
                         @endforeach
+                        
+                        <input type="hidden" name="jumlah" value="{{ $count}}">  
+                       
                     </div>
                     <button type="submit" class="btn btn-primary" onClick= "return confirm('Apakah Anda Sudah Yakin dengan Jawabannya ?')" >Simpan</button>
                 </form>

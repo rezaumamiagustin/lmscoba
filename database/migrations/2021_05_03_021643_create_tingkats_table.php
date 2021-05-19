@@ -13,9 +13,9 @@ class CreateTingkatsTable extends Migration
      */
     public function up()
     {
-        Schema::create('tingkats', function (Blueprint $table) {
+        Schema::create('kelas', function (Blueprint $table) {
             $table->id();
-            $table->string('nama_tingkat');
+            $table->string('nama_kelas');
             $table->timestamps();
         });
     }

@@ -16,13 +16,13 @@
                 @method('patch')
 
                 <div class="form-group">
-                    <label>Tingkat</label>
+                    <label>Kelas</label>
                     <br>
-                    <select name="id_tingkat" id="id_tingkat">
-                        <option disabled value>Pilihan Tingkat </option>
-                        <option value="{{  $ulangan->id_tingkat }}">{{ $ulangan->tingkat->nama_tingkat }} </option>
-                        @foreach ($tingkat as $ting)
-                            <option value="{{ $ting->id }}">{{ $ting->nama_tingkat}}</option>
+                    <select name="id_kelas" id="id_kelas">
+                        <option disabled value>Pilihan Kelas </option>
+                        <option value="{{  $ulangan->id_kelas }}">{{ $ulangan->kelas->nama_kelas }} </option>
+                        @foreach ($kelas as $ting)
+                            <option value="{{ $ting->id }}">{{ $ting->nama_kelas}}</option>
                         @endforeach
                     </select>
                 </div>
@@ -39,17 +39,6 @@
                     </select>
                 </div>
 
-                <div class="form-group">
-                    <label>Jurusan</label>
-                    <br>
-                    <select name="id_jurusan" id="id_jurusan">
-                        <option disabled value>Pilihan Jurusan </option>
-                        <option value="{{  $ulangan->id_jurusan }}">{{ $ulangan->jurusan->nama_jurusan }} </option>
-                        @foreach ($jurusan as $jur)
-                            <option value="{{ $jur->id }}">{{ $jur->nama_jurusan}}</option>
-                        @endforeach
-                    </select>
-                </div>
 
                 <div class="form-group">
                     <label>Nama</label>

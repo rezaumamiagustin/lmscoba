@@ -8,10 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Tingkat extends Model
 {
     use HasFactory;
-    protected $table = "tingkats";
-    protected $fillable = ['nama_tingkat'];
+    protected $table = "kelas";
+    protected $fillable = ['nama_kelas'];
 
-    public function tingkat_ulangan()
+    public function kelas_ulangan()
     {
         return $this->hasMany(Ulangan::class, 'id_ulangan');
     }

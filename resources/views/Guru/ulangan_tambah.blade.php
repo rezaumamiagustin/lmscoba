@@ -16,12 +16,12 @@
                 @csrf
 
                 <div class="form-group">
-                    <label>Tingkat</label>
+                    <label>Kelas</label>
                     <br>
-                    <select name="id_tingkat" id="id_tingkat">
-                        <option disabled value>Pilihan Tingkat </option>
-                        @foreach ($tingkat as $ting)
-                            <option value="{{ $ting->id }}">{{ $ting->nama_tingkat}}</option>
+                    <select name="id_kelas" id="id_kelas">
+                        <option disabled value>Pilihan Kelas </option>
+                        @foreach ($kelas as $ting)
+                            <option value="{{ $ting->id }}">{{ $ting->nama_kelas}}</option>
                         @endforeach
                     </select>
                 </div>
@@ -33,17 +33,6 @@
                         <option disabled value>Pilihan Mapel </option>
                         @foreach ($mapel as $map)
                             <option value="{{ $map->id }}">{{ $map->nama_mapel}}</option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>Jurusan</label>
-                    <br>
-                    <select name="id_jurusan" id="id_jurusan">
-                        <option disabled value>Pilihan Mapel </option>
-                        @foreach ($jurusan as $jur)
-                            <option value="{{ $jur->id }}">{{ $jur->nama_jurusan}}</option>
                         @endforeach
                     </select>
                 </div>

@@ -28,14 +28,13 @@
         </tr>
     </thead>
     @php $no=1; @endphp
-    @foreach ($nilai_ulangan as $nu)
+    @foreach ($ul as $nu)
     <tr>
         <td>{{ $no++ }}</td>
         {{-- <td>Nama Siswa</td> --}}
         {{-- <td>{{ $nu->jawaban }}</td> --}}
         <td>{{ $nu->benar }}</td>
         <td>{{ $nu->salah }}</td>
-        
         <td>{{ $nu->nilai }}</td>
         {{-- <td>{{ $ul->waktu_selesai }}</td>
         <td>

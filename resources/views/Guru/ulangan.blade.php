@@ -18,9 +18,8 @@
         <thead>
             <tr>
                 <th>No</th>
-                <th>Tingkat</th>
+                <th>Kelas</th>
                 <th>Mapel</th>
-                <th>Jurusan</th>
                 <th>Judul Ulangan</th>
                 <th>Waktu Mulai</th>
                 <th>Waktu Selesai</th>
@@ -31,9 +30,8 @@
         @foreach ($ulangan as $ul)
          <tr>
             <td>{{ $no++ }}</td>
-            <td>{{ $ul->tingkat->nama_tingkat }}</td>
+            <td>{{ $ul->kelas->nama_kelas}}</td>
             <td>{{ $ul->mapel->nama_mapel }}</td>
-            <td>{{ $ul->jurusan->nama_jurusan }}</td>
             <td>{{ $ul->judul_ulangan }}</td>
             <td>{{ $ul->waktu_mulai }}</td>
             <td>{{ $ul->waktu_selesai }}</td>

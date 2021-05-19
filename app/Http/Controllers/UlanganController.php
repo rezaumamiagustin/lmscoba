@@ -21,32 +21,29 @@ class UlanganController extends Controller
     
     public function index()
     {
-        $ulangan = Ulangan::with('tingkat','mapel','jurusan')->latest()->paginate(100);
+        $ulangan = Ulangan::with('kelas','mapel')->latest()->paginate(100);
         return view('Guru/ulangan', compact('ulangan'));
     }
 
     public function create()
     {
-        $tingkat = Tingkat::all();
+        $kelas = Tingkat::all();
         $mapel = Mapel::all();
-        $jurusan = Jurusan::all();
-        return view('Guru/ulangan_tambah', compact('tingkat','mapel','jurusan'));
+        return view('Guru/ulangan_tambah', compact('kelas','mapel'));
     }
 
     public function store(Request $request)
     {
         $this->validate($request, [
-            'id_tingkat' => 'required',
+            'id_kelas' => 'required',
             'id_mapel' => 'required',
-            'id_jurusan' => 'required',
             'judul_ulangan' => 'required',
             'waktu_mulai' => 'required',
             'waktu_selesai' => 'required'
         ]);
         Ulangan::create([
-            'id_tingkat' => $request->id_tingkat,
+            'id_kelas' => $request->id_kelas,
             'id_mapel' => $request->id_mapel,
-            'id_jurusan' => $request->id_jurusan,
             'judul_ulangan' => $request->judul_ulangan,
             'waktu_mulai' => $request->waktu_mulai,
             'waktu_selesai' => $request->waktu_selesai
@@ -62,11 +59,10 @@ class UlanganController extends Controller
 
     public function edit($id)
     {
-        $tingkat = Tingkat::all();
+        $kelas = Tingkat::all();
         $mapel = Mapel::all();
-        $jurusan = Jurusan::all();
-        $ulangan = Ulangan::with('tingkat','mapel','jurusan')->findorfail($id);
-        return view('Guru/ulangan_edit', compact('tingkat','mapel','jurusan','ulangan'));
+        $ulangan = Ulangan::with('kelas','mapel')->findorfail($id);
+        return view('Guru/ulangan_edit', compact('kelas','mapel','ulangan'));
         // return view('Guru/ulangan_edit', ['ulangan' => $ulangan]);
     }
 
@@ -79,9 +75,8 @@ class UlanganController extends Controller
         ]);
         Ulangan::where('id', $ulangan->id)
             ->update([
-                'id_tingkat' => $request->id_tingkat,
+                'id_kelas' => $request->id_kelas,
                 'id_mapel' => $request->id_mapel,
-                'id_jurusan' => $request->id_jurusan,
                 'judul_ulangan' => $request->judul_ulangan,
                 'waktu_mulai' => $request->waktu_mulai,
                 'waktu_selesai' => $request->waktu_selesai
@@ -102,6 +97,13 @@ class UlanganController extends Controller
     {
         $ul = DB::table('soals')
                     ->where('id_ulangan',$id_ulangan)->get();
+        $ulangan = Ulangan::all();
+        $soal = Soal::with('ulangan')->paginate(100);
+        return view('Guru/ulangan_soal', compact('soal','ulangan','ul'));
+    }
+    public function soall()
+    {
+        $ul=Soal::with('ulangan')->paginate(100);
         $ulangan = Ulangan::all();
         $soal = Soal::with('ulangan')->paginate(100);
         return view('Guru/ulangan_soal', compact('soal','ulangan','ul'));
@@ -314,16 +316,16 @@ class UlanganController extends Controller
 
     // Untuk Siswa
     
-    public function ulSiswa(Request $request){
+    public function ulSiswa(){
+
         $id_siswa=1;
         $join = DB::select('select u.id, u.judul_ulangan, u.waktu_mulai, u.waktu_selesai, nu.nilai
         from ulangans as u 
-        join nilai_ulangans as nu on u.id= nu.id_ulangan
-        where id_siswa=1'
+        join nilai_ulangans as nu on u.id= nu.id_ulangan'
         );
         $nu = NilaiUlangan::all();
         $soal= Soal::with('ulangan')->latest()->paginate(100);
-        $ulangan = Ulangan::with('tingkat','mapel','jurusan')->latest()->paginate(100);
+        $ulangan = Ulangan::with('kelas','mapel')->latest()->paginate(100);
         return view('Siswa/ulangan', compact('ulangan','soal','nu','join'));
     }
 
@@ -337,37 +339,46 @@ class UlanganController extends Controller
         // $ulangan = Ulangan::findorfail($id);
         return view('Siswa/ulangan_soal', compact('ulg','soal','siswa','nilaiul','sl'));
     } 
-    
-    // public function ulanganSoal($id_ulangan){
-    //     $soal = Soal::with('ulangan')->findorfail($id_ulangan);
-    //     $sl = DB::table('soals')
-    //                 ->where('id_ulangan')->get();
+
+    // public function kerjakann(){
+    //     // $sl = DB::table('soals')
+    //     //             ->where('id_ulangan',$id_ulangan)->get();
     //     $nilaiul=NilaiUlangan::all();
     //     $siswa=Siswa::all();
-    //     $ulangan = Ulangan::all();
-    //     // $soal = Soal::all();
-    //     return view('Siswa/ulangan_soal', compact('siswa','ulangan','nilaiul','sl','soal'));
-    // }
+    //     $ulg = Ulangan::all();
+    //     $soal = Soal::all();
+    //     // $ulangan = Ulangan::findorfail($id);
+    //     return view('Siswa/ulangan_soal', compact('ulg','soal','siswa','nilaiul'));
+    // } 
+    
+    public function ulanganSoal(){
+        // $soal = Soal::with('ulangan')->findorfail($id_ulangan);
+        // $sl = DB::table('soals')
+        //             ->where('id_ulangan')->get();
+        $nilaiul=NilaiUlangan::all();
+        $siswa=Siswa::all();
+        $ulangan = Ulangan::all();
+        // $soal = Soal::all();
+        return view('Siswa/ulangan_soal', compact('siswa','ulangan','nilaiul','sl','soal'));
+    }
 
     // mendapatkan nilainya
     public function kerjakanSoal(Request $request){
         $pilihan     = $request->pilihan;
-        $id_soal     = $request->id;
+        $id_s = [];
+        foreach ($request->pilihan as $ids => $soals) {
+            array_push ($id_s, $ids);
+        }
         $jumlah      = $request->jumlah;
-
+        // $dat='';
         $nilai = 0;
         $benar = 0;
         $salah = 0;
         $kosong = 0;
-        for ($i = 0; $i < $jumlah; $i++) {
+        for ($i = 0; $i < count($id_s); $i++) {
             //id nomor soal
-            $nomor = $id_soal[$i];
-
-            //jika user tidak memilih jawaban
-            if (empty($pilihan[$nomor])) {
-                $kosong++;
-            } else {
-                //jawaban dari user
+            $nomor = $id_s[$i];
+            //jawaban dari user
                 $jawaban = $pilihan[$nomor];
                 //cocokan jawaban user dengan jawaban di database
                 $query = DB::table('soals')
@@ -381,44 +392,39 @@ class UlanganController extends Controller
                     //jika salah
                     $salah++;
                 }
-            }
-            // $jumlah_soal = DB::table('soal')
-            //     ->where('status', '=', 'Aktif')->count();
-            $jumlah_soal = DB::table('soals')->count();
-            $nilai = 100 / $jumlah_soal * $benar;
-            $hasil = number_format($nilai, 1);
-            $ceknilai = 50;
-            if ($hasil > $ceknilai) {
-                $dat = [
-                    'id_siswa' => $request->id_siswa,
-                    'id_ulangan'=> $request->id_ulangan,
-                    'benar' => $benar,
-                    'salah' => $salah,
-                    // 'kosong' => $kosong,
-                    'nilai' => $hasil
-                ];
-                NilaiUlangan::insert($dat);
-            } else {
-                $dat = [
-                    'id_siswa' => $request->id_siswa,
-                    'id_ulangan'=> $request->id_ulangan,
-                    'benar' => $benar,
-                    'salah' => $salah,
-                    // 'kosong' => $kosong,
-                    'nilai' => $hasil
-                ];
-                NilaiUlangan::insert($dat);
-            }
+            
         }
-        // $qry = Ulangan::select('nilai_min')->first();
-        // $ceknilai = $qry->nilai_min;
+        $salah += (int)$jumlah - count($id_s);
+        $nilai = 100 / (int)$jumlah * (int)$benar;
+        $hasil = number_format($nilai, 1);
+
+        $dat = [
+                    'id_siswa' => $request->id_siswa,
+                    'id_ulangan'=> $request->id_ulangan,
+                    'benar' => $benar,
+                    'salah' => $salah,
+                    // 'kosong' => $kosong,
+                    'nilai' => $hasil
+                ];
+                NilaiUlangan::insert($dat);
+
+        // dd($dat);
         
-        // return $hasil;
         return redirect('/Siswa/ulangan_hasil')->with('status', 'Ini hasil ulangannya!');
     }
-    public function nilaiUl(){
+
+    public function nilaiUl($id_ulangan){
+        $ul = DB::table('nilai_ulangans')
+                    ->where('id_ulangan',$id_ulangan)->get();
+        $ulangan=Ulangan::all();
         $nilai_ulangan = NilaiUlangan::with('ulangan','siswa')->paginate(100);
-        return view('Siswa/ulangan_hasil', compact('nilai_ulangan'));
+        return view('Siswa/ulangan_hasil', compact('nilai_ulangan','ulangan','ul'));
+    }
+
+    public function nilaiUll(){
+        $ulangan=Ulangan::all();
+        $ul = NilaiUlangan::with('ulangan','siswa')->paginate(100);
+        return view('Siswa/ulangan_hasil', compact('ulangan','ul'));
     }
 
 }

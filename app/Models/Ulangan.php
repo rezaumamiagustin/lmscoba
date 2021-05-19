@@ -10,18 +10,18 @@ class Ulangan extends Model
     use HasFactory;
     protected $table = "ulangans";
     
-    protected $fillable = ['id_tingkat','id_jurusan','id_mapel','judul_ulangan',
+    protected $fillable = ['id_kelas','id_mapel','judul_ulangan',
      'waktu_mulai', 'waktu_selesai'];
 
-    public function tingkat()
+    public function kelas()
     {
-    return $this->belongsTo(Tingkat::class, 'id_tingkat');
+    return $this->belongsTo(Tingkat::class, 'id_kelas');
     }
 
-    public function jurusan()
-    {
-    return $this->belongsTo(Jurusan::class, 'id_jurusan');
-    }
+    // public function jurusan()
+    // {
+    // return $this->belongsTo(Jurusan::class, 'id_jurusan');
+    // }
 
     public function mapel()
     {

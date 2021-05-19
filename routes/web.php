@@ -30,7 +30,8 @@ Route::get('/Guru/ulangan/edit/{ulangan}', [UlanganController::class, 'edit']);
 Route::patch('/Guru/ulangan/{ulangan}', [UlanganController::class, 'update']);
 Route::delete('/Guru/ulangan/{id}', [UlanganController::class, 'destroy']);
 Route::get('/Guru/ulangan/soal/{ulangan}', [UlanganController::class, 'soal']);
-Route::get('/Guru/ulangan_soal', [UlanganController::class, 'soal']);
+Route::get('/Guru/ulangan_soal/{$id_ulangan}', [UlanganController::class, 'soal']);
+Route::get('/Guru/ulangan_soal', [UlanganController::class, 'soall']);
 Route::get('/Guru/ulangan/inputSoal', [UlanganController::class, 'inputSoal']);
 Route::post('/ulangan/buatSoal', [UlanganController::class, 'buatSoal'])->name('storeSoalTambah');
 Route::get('/Guru/ulangan_soal/editSoal/{soal}', [UlanganController::class, 'editSoal']);
@@ -40,10 +41,13 @@ Route::delete('/Guru/ulangan_soal/{id}', [UlanganController::class, 'hapusSoal']
 
 // ============Ulangan Siswa=========
 Route::get('/Siswa/ulangan', [UlanganController::class, 'ulSiswa']);
-Route::get('/Siswa/ulangan_soal/kerjakan/{id_ulangan}', [UlanganController::class, 'kerjakan'])->name('kerjakan');;
-Route::get('/Siswa/ulangan_soal/soal/{id_ulangan}', [UlanganController::class, 'ulanganSoal']);
+Route::get('/Siswa/ulangan_soal/kerjakan/{ulangan}', [UlanganController::class, 'kerjakan']);
+Route::get('/Siswa/ulangan_soal/kerjakan', [UlanganController::class, 'kerjakan']);
+Route::get('/Siswa/ulangan_soal', [UlanganController::class, 'ulanganSoal']);
+Route::get('/Siswa/ulangan_soal/{id_ulangan}', [UlanganController::class, 'ulanganSoal']);
 // Route::get('/Siswa/ulangan_soal/kerjakan/{$id_ulangan}', [UlanganController::class, 'kerjakan']);
 // Route::get('/Siswa/ulangan_soal/kerjakan', [UlanganController::class, 'kerjakan']);
 Route::post('/ulangan_soal/kerjakanSoal', [UlanganController::class, 'kerjakanSoal'])->name('kerjakanSoal');
-// Route::post('/ulangan_soal', [UlanganController::class, 'kerjakanSoal']);
-Route::get('/Siswa/ulangan_hasil', [UlanganController::class, 'nilaiUl']);
+// Route::post('/ulangan_hasil', [UlanganController::class, 'kerjakanSoal']);
+Route::get('/Siswa/ulangan_hasil/{$id_ulangan}', [UlanganController::class, 'nilaiUl']);
+Route::get('/Siswa/ulangan_hasil', [UlanganController::class, 'nilaiUll']);
