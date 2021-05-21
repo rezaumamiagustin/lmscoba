@@ -5,7 +5,7 @@
     <div class="container">
         <div class="card mt-5">
             <div class="card-header text-center">
-                <strong>TAMBAH DATA ULANGAN</strong>
+                <strong>TAMBAH DATA SOAL</strong>
             </div>
             <div class="card-body">
                 <a href="/Guru/ulangan_soal" class="btn btn-primary">Kembali</a>

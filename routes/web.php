@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\MateriController;
 use App\Http\Controllers\UlanganController;
 use Illuminate\Support\Facades\Route;
 
@@ -32,11 +33,12 @@ Route::delete('/Guru/ulangan/{id}', [UlanganController::class, 'destroy']);
 Route::get('/Guru/ulangan/soal/{ulangan}', [UlanganController::class, 'soal']);
 Route::get('/Guru/ulangan_soal/{$id_ulangan}', [UlanganController::class, 'soal']);
 Route::get('/Guru/ulangan_soal', [UlanganController::class, 'soall']);
+Route::get('/Guru/ulangan/inputSoal/{$id_ulangan}', [UlanganController::class, 'inputSoall']);
 Route::get('/Guru/ulangan/inputSoal', [UlanganController::class, 'inputSoal']);
 Route::post('/ulangan/buatSoal', [UlanganController::class, 'buatSoal'])->name('storeSoalTambah');
 Route::get('/Guru/ulangan_soal/editSoal/{soal}', [UlanganController::class, 'editSoal']);
 Route::patch('/Guru/ulangan_soal/{soal}', [UlanganController::class, 'updateSoal']);
-Route::delete('/Guru/ulangan_soal/{id}', [UlanganController::class, 'hapusSoal']);
+Route::delete('/Guru/ulangan_soal/{soal}', [UlanganController::class, 'hapusSoal']);
 
 
 // ============Ulangan Siswa=========
@@ -51,3 +53,27 @@ Route::post('/ulangan_soal/kerjakanSoal', [UlanganController::class, 'kerjakanSo
 // Route::post('/ulangan_hasil', [UlanganController::class, 'kerjakanSoal']);
 Route::get('/Siswa/ulangan_hasil/{$id_ulangan}', [UlanganController::class, 'nilaiUl']);
 Route::get('/Siswa/ulangan_hasil', [UlanganController::class, 'nilaiUll']);
+
+// ============Mapel Guru=========
+Route::get('/Guru/mapel', [MateriController::class, 'index']);
+Route::get('/Guru/mapel/create', [MateriController::class, 'create']);
+Route::post('/mapel', [MateriController::class, 'store'])->name('storeMapelTambah');
+Route::get('/Guru/mapel/edit/{mapel}', [MateriController::class, 'edit']);
+Route::patch('/Guru/mapel/{mapel}', [MateriController::class, 'update']);
+Route::delete('/Guru/mapel/{id}', [MateriController::class, 'destroy']);
+Route::get('/Guru/mapel/materi/{mapel}', [MateriController::class, 'materi']);
+
+
+// ============Materi Guru=========
+Route::get('/Guru/materi', [MateriController::class, 'indexMat']);
+Route::get('/Guru/materi/{$id_detMapel}', [MateriController::class, 'materi']);
+Route::get('/Guru/materi/createMat', [MateriController::class, 'createMat']);
+// Route::post('/ulangan/buatSoal', [UlanganController::class, 'buatSoal'])->name('storeSoalTambah');
+Route::post('/storeMat', [MateriController::class, 'storeMat'])->name('storeMateriTambah');
+Route::get('/Guru/materi/editMat/{materi}', [MateriController::class, 'editMat']);
+Route::patch('/Guru/materi/{materi}', [MateriController::class, 'updateMat']);
+Route::delete('/Guru/materi/{materi}', [MateriController::class, 'destroyMat']);
+Route::get('/Guru/materi/showMat/{id}', [MateriController::class, 'showMat']);
+Route::get('/viewPDF/{id}', [MateriController::class, 'pdfStream'])->name('pdfStream');
+// Route::get('/Guru/materi/download', [MateriController::class, 'download'])->name('download');
+// Route::get('/Guru/materi/download/{namafile}', [MateriController::class, 'download'])->name('download');

@@ -15,4 +15,9 @@ class Tingkat extends Model
     {
         return $this->hasMany(Ulangan::class, 'id_ulangan');
     }
+
+    public function kelas_mapel()
+    {
+        return $this->hasMany(Mapel::class, 'id_mapel');
+    }
 }

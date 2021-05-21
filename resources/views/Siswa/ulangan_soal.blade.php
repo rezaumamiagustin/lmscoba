@@ -39,7 +39,7 @@
                         @endphp
                         @foreach ($sl as $so)
                         
-                        <input type="text"  name="id_soal[{{$so->id}}]" value="{{$so->id}}" disabled>
+                        <input type="hidden"  name="id_soal[{{$so->id}}]" value="{{$so->id}}" disabled>
                         @php
                             $count++;
                         @endphp
@@ -48,7 +48,7 @@
                             <div class="form-group">
                                 <h5> {!! $so->soal !!}</h5>
                                 @if($so->foto !=null)
-                                <img src="{{ asset('temp/soal/'. $so->foto) }}" height="30%" width="30%">
+                                <img src="{{ asset('storage/fotoSoal/'. $so->foto) }}" height="30%" width="30%">
                                 @endif
                                 
                                 <p><input type='radio' id="pilihan" name='pilihan[{{$so->id}}]' value='pilA' /> A.  {{ $so->pilA }}

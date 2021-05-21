@@ -18,7 +18,7 @@
                         <label>Ulangan</label>
                         <br>
                         <select name="id_ulangan" id="id_ulangan">
-                            <option disabled value>Pilihan Tingkat </option>
+                            <option disabled value>Pilihan Ulangan </option>
                             @foreach ($ulangan as $ul)
                                 <option value="{{ $ul->id }}">{{ $ul->judul_ulangan}}</option>
                             @endforeach
@@ -50,7 +50,7 @@
                     </div>
 
                     <div class="form-group">
-                        <img src="{{ asset('temp/soal/'. $soal->foto) }}" height="50%" width="100%">
+                        <img src="{{ asset('storage/fotoSoal/'. $soal->foto) }}" height="50%" width="100%">
                         @if($errors->has('foto'))
                         <div class="text-danger">
                             {{ $errors->first('foto')}}

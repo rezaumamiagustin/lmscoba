@@ -35,14 +35,16 @@
             <td>{{ $ul->waktu_mulai }}</td>
             <td>{{ $ul->waktu_selesai }}</td>
             <td>
-                {{--<p><input type="time" name="waktu" min="07:00" max="11:30" required></p> --}}
-                <button type ="datetime-local" class="btn btn-info" min="{{$ul->waktu_mulai}}" max="{{ $ul->waktu_selesai }}" href="/Siswa/ulangan_soal/kerjakan/{{ $ul->id }}" required>Kerjakan</button>
-                {{--<a class="btn btn-info" href="/Siswa/ulangan_soal/kerjakan/{{ $ul->id }}">Kerjakan</a>--}}
-                {{-- @if ($ul->nilai == null)
-                    <a class="btn btn-info" href="/Siswa/ulangan_soal/kerjakan/{{ $ul->id }}">Kerjakan</a>
-                @else
-                    <a class="btn btn-info disabled" href="/Siswa/ulangan_soal/kerjakan/{{ $ul->id }}">Kerjakan</a>
-                @endif  --}}
+                {{-- <button type ="datetime-local" class="btn btn-info" min="{{$ul->waktu_mulai}}" max="{{ $ul->waktu_selesai }}" href="/Siswa/ulangan_soal/kerjakan/{{ $ul->id }}" required>Kerjakan</button> --}}
+                {{-- <a class="btn btn-info" href="/Siswa/ulangan_soal/kerjakan/{{ $ul->id }}">Kerjakan</a> --}}
+                {{-- @if (Carbon\Carbon::now()->between(Carbon\Carbon::parse($edition->start), Carbon\Carbon::parse($edition->end)) --}}
+                
+                @if (time()<= strtotime($ul->waktu_mulai) || time()<=($ul->waktu_selesai))
+                
+                <a class="btn btn-info" href="/Siswa/ulangan_soal/kerjakan/{{ $ul->id }}">Kerjakan</a>
+            
+                @endif
+                
             </td>
         </tr>
         @endforeach

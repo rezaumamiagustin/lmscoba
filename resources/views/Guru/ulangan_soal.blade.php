@@ -40,7 +40,7 @@
                 {{-- <td>{{ $so->ulangan->judul_ulangan }}</td> --}}
                 {{-- kalo pake summernote : jadi {!! $so->soal !!} --}}
                 <td>{!! $so->soal !!}</td>
-                <td><img src="{{ asset('temp/soal/'. $so->foto) }}" height="50%" width="100%"></td>
+                <td><img src="{{ asset('storage/fotoSoal/'. $so->foto) }}" height="50%" width="100%"></td>
                 <td>{{ $so->pilA }}</td>
                 <td>{{ $so->pilB }}</td>
                 <td>{{ $so->pilC }}</td>

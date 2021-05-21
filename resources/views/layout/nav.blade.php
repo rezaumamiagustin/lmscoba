@@ -38,3 +38,12 @@
     <i class="fas fa-book"></i>Kerjakan Ulangan</a>
 </li>
 
+{{-- Materi --}}
+<li>
+    <a href="/Guru/mapel">
+    <i class="fas fa-book"></i>Guru Buat Materi</a>
+</li>
+<li>
+    <a href="/Siswa/mapel">
+    <i class="fas fa-book"></i>Siswa menerima materi</a>
+</li>
