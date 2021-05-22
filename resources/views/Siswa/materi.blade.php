@@ -12,9 +12,6 @@
     <div class="float-left my-2">
         <a class="btn btn-primary" href="/Guru/mapel">Kembali</a>
     </div>
-    <div class="float-right my-2">
-        <a class="btn btn-success" href="/Guru/materi/createMat">Tambah Materi</a>
-    </div>
     <br>
     <br><br>
     <table id = "table" class="table table-striped table-bordered" style="width:100%">
@@ -26,7 +23,7 @@
                 <th>Describe Materi</th>
                 <th>File Materi</th>
                 <th>Link Materi</th>
-                <th width="280px">Aksi</th>
+                {{-- <th width="280px">Aksi</th> --}}
             </tr>
         </thead>
         @php $no=1; @endphp
@@ -48,20 +45,11 @@
                 {{-- <a href="{{route('pdfStream', ['id' => $mat->id])}}" target="_blank" > {{ $mat->file_materi }} </a> --}}
                 <a href="{{route('download', ['id' => $mat->id])}}" target="_blank" > {{ $mat->file_materi }} </a>
             </td>
-            {{-- <td> <a href="{{ $mat->file_materi }}" target="_blank" rel="noopeener noreferrer">{{ $mat->file_materi }}</a> </td> --}}
+                {{-- <td> <a href="{{ $mat->file_materi }}" target="_blank" rel="noopeener noreferrer">{{ $mat->file_materi }}</a> </td> --}}
             @endif
             {{-- <td><img src="{{ asset('storage/fileMateri/'. $mat->file_materi) }}" height="50%" width="100%"></td> --}}
             <td><a href="{{ $mat->link_materi }}" target="_blank" rel="noopeener noreferrer">{{ $mat->link_materi }}</a></td>
-            <td>
-                <a class="btn btn-info" href="/Guru/materi/editMat/{{ $mat->id }}">Edit</a>
-                <a class="btn btn-primary" href="/Guru/materi/showMat/{{ $mat->id }}">Detail</a>
-                <form action="/Guru/materi/{{ $mat->id }}" method="post"
-                    class="d-inline">
-                        @method('delete')
-                        @csrf
-                        <button type="submit" class="btn btn-danger" onClick= "return confirm('Yakin Hapus Data ?')">Hapus</button>
-                </form>
-            </td>
+            
         </tr>
         @endforeach
     </table>

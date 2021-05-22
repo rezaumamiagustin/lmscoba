@@ -75,5 +75,9 @@ Route::patch('/Guru/materi/{materi}', [MateriController::class, 'updateMat']);
 Route::delete('/Guru/materi/{materi}', [MateriController::class, 'destroyMat']);
 Route::get('/Guru/materi/showMat/{id}', [MateriController::class, 'showMat']);
 Route::get('/viewPDF/{id}', [MateriController::class, 'pdfStream'])->name('pdfStream');
-// Route::get('/Guru/materi/download', [MateriController::class, 'download'])->name('download');
-// Route::get('/Guru/materi/download/{namafile}', [MateriController::class, 'download'])->name('download');
+Route::get('/download/{id}', [MateriController::class, 'download'])->name('download');
+
+// ============Mapel & Materi Guru=========
+Route::get('/Siswa/mapel', [MateriController::class, 'mapSiswa']);
+Route::get('/Siswa/materi', [MateriController::class, 'matSiswa']);
+Route::get('/Siswa/mapel/materi/{mapel}', [MateriController::class, 'materiSis']);

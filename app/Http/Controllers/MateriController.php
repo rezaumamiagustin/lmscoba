@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Http\File;
+use PhpOffice\PhpWord\TemplateProcessor;
 
 class MateriController extends Controller
 {
@@ -21,7 +22,6 @@ class MateriController extends Controller
         return view('Guru/mapel', compact('mapel'));
     }
 
-    
     public function create()
     {
         $map_kelas = Tingkat::all();
@@ -158,8 +158,6 @@ class MateriController extends Controller
     public function editMat($id)
     {
         $detMap = DetailMapel::all();
-        // $detMap = DetailMapel::with('detmap_mapel','detmap_guru')->get();
-        // $detMap = DetailMapel::with('detmap_mapel','detmap_guru')->get();
         $materi = Materi::with('materi_detMap')->findorfail($id);
         return view('Guru/materi_edit', compact('detMap','materi'));
     }
@@ -209,33 +207,45 @@ class MateriController extends Controller
         return redirect('/Guru/materi')->with('status', 'Data Materi berhasil di Hapus !! ');
     }
 
-    public function pdfStream($id){
-        $pdfFile = Materi::where('id', $id)->firstOrFail();
-        $pdf = $pdfFile->file_materi;
-        // $my_byte = stream_get_contents($pdf);
-        dd($pdf);
-        // $decoded = base64_decode($my_byte);
-        // $file = $pdfFile->file_materi;
-        // file_put_contents($file, $decoded);
-        // return response()->file($file)->deleteFileAfterSend(true);
+    public function pdfStream($id)
+    {
+        $materi = Materi::findOrFail($id);
+        $temp = new TemplateProcessor('storage/fileMateri/'. $materi->file_materi);
+        $filename=$materi->file_materi;
+        $temp->saveAs($filename . '.docx');
+        return response()->download($filename . '.docx')->deleteFileAfterSend(true);
+    }
+    
+    public function download($id)
+    {
+        $materi = Materi::findOrFail($id);
+        $fm = $materi->file_materi;
+        return response()->download(public_path('storage/fileMateri/' . $fm));
     }
 
-    public function download()
+    
+    // ===================== MAPEL MATERI SISWA========================
+
+    public function MapSiswa()
     {
-        // $materi = Materi::find($id);
-        // $file = $materi->file_materi;
-        // return Storage::download($file);
-        // $file = $materi->file_materi;
-        // $filepath = (public_path().'/temp/file_materi',$file;
-        // return response()->download($filepath);
-        // return Storage::download($materi->path,$materi->namafile);
-        // return Storage::download($materi->file_materi->public_path().'/temp/file_materi',$materi->namafile);
-        // $files = Storage::files("public");
-        // $file_materi=array();
-        // foreach ($files as $key => $value) {
-        //     $value= str_replace("public/","",$value);
-        //     array_push($file_materi,$value);
-        // }
-        // return view('Guru/materi_detail', ['file_materi' => $file_materi]);
+        $mapel = Mapel::with('mapel_kelas')->latest()->paginate(100);
+        return view('Siswa/mapel', compact('mapel'));
     }
+
+    // untuk kehalaman materi
+    public function materiSis($id_detMapel)
+    {
+        $mat = DB::table('materis')
+                    ->where('id_detMapel',$id_detMapel)->get();
+        $materi = Materi::all();
+        $mapel = Mapel::with('mapel_kelas')->paginate(100);
+        return view('Siswa/materi', compact('mat','materi','mapel'));
+    }
+
+    public function matSiswa()
+    {
+        $materi = Materi::with('materi_detMap')->latest()->paginate(100);
+        return view('Siswa/materi', compact('materi'));
+    }
+
 }
